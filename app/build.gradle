@@ -23,8 +23,8 @@ tasks.named('test') {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "kang-hyungu_building-tomcat-spring"
-        property "sonar.organization", "kang-hyungu"
-        property "sonar.host.url", "https://sonarcloud.io"
+        property 'sonar.projectKey', 'kang-hyungu_building-tomcat-spring'
+        property 'sonar.organization', 'kang-hyungu'
+        property 'sonar.host.url', 'https://sonarcloud.io'
     }
 }
