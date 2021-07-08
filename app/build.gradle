@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'org.sonarqube' version '3.3'
 }
 
 repositories {
@@ -18,4 +19,12 @@ application {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "kang-hyungu_building-tomcat-spring"
+        property "sonar.organization", "kang-hyungu"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
