@@ -6,6 +6,7 @@ public class JwpApplication {
     }
 
     public static void main(String[] args) {
+        System.out.println("pull request");
         System.out.println(new JwpApplication().getGreeting());
     }
 }
