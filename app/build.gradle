@@ -14,7 +14,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'nextstep.jwp.JwpApplication'
+    mainClass.set('nextstep.jwp.JwpApplication')
 }
 
 tasks.named('test') {
