@@ -3,30 +3,39 @@ package nextstep.jwp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
 
 public class HttpRequestHandler implements Runnable {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpRequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestHandler.class);
 
     private final Socket connection;
 
     public HttpRequestHandler(Socket connection) {
-        Objects.requireNonNull(connection);
-        this.connection = connection;
+        this.connection = Objects.requireNonNull(connection);
     }
 
     @Override
     public void run() {
-        try (InputStream inputStream = connection.getInputStream();
-             OutputStream outputStream = connection.getOutputStream()) {
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        } catch (IOException e) {
-            log.error("HttpRequestHandler Exception : {}", e.getMessage());
+        try (InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+             OutputStream outputStream = new BufferedOutputStream(connection.getOutputStream())) {
+
+        } catch (IOException exception) {
+            logger.error("Exception stream", exception);
+        } finally {
+            close();
+        }
+    }
+
+    private void close() {
+        try {
+            connection.close();
+        } catch (IOException exception) {
+            logger.error("Exception closing socket", exception);
         }
     }
 }
