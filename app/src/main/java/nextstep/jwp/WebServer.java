@@ -1,5 +1,6 @@
 package nextstep.jwp;
 
+import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,33 +12,38 @@ import java.util.concurrent.Executors;
 
 public class WebServer {
 
-    private static final Logger log = LoggerFactory.getLogger(WebServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
 
     private final int port;
     private final ExecutorService pool;
 
     public WebServer(int port, int poolSize) {
         this.port = checkPort(port);
-        this.pool = Executors.newFixedThreadPool(poolSize);
+        this.pool = Executors.newFixedThreadPool(defaultPoolSize(poolSize));
     }
 
     private int checkPort(int port) {
-        if (port <= 0) {
-            throw new IllegalArgumentException("port는 0보다 커야 합니다. 입력값: " + port);
-        }
-        return port;
+        return Ints.constrainToRange(port, 1, 65535);
+    }
+
+    private int defaultPoolSize(int poolSize) {
+        final int DEFAULT_POOL_SIZE = 100;
+        return Math.max(poolSize, DEFAULT_POOL_SIZE);
     }
 
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            log.info("Web Server started {} port.", port);
+            logger.info("Web Server started {} port.", serverSocket.getLocalPort());
 
             Socket connection;
             while ((connection = serverSocket.accept()) != null) {
-                pool.execute(new HttpRequestHandler(connection));
+                pool.submit(new HttpRequestHandler(connection));
             }
-        } catch (IOException e) {
-            log.error("Web Server Exception : {}", e.getMessage());
+        } catch (IOException exception) {
+            logger.error("Exception accepting connection", exception);
+        } catch (RuntimeException exception) {
+            logger.error("Unexpected error", exception);
+        } finally {
             pool.shutdown();
         }
     }
