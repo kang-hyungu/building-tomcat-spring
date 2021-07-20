@@ -1,6 +1,5 @@
 package nextstep.jwp;
 
-import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,26 +8,28 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 public class WebServer {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
+    private static final int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_POOL_SIZE = 100;
 
     private final int port;
     private final ExecutorService pool;
 
+    public WebServer() {
+        this(DEFAULT_PORT, DEFAULT_POOL_SIZE);
+    }
+
+    public WebServer(int port) {
+        this(port, DEFAULT_POOL_SIZE);
+    }
+
     public WebServer(int port, int poolSize) {
         this.port = checkPort(port);
         this.pool = Executors.newFixedThreadPool(defaultPoolSize(poolSize));
-    }
-
-    private int checkPort(int port) {
-        return Ints.constrainToRange(port, 1, 65535);
-    }
-
-    private int defaultPoolSize(int poolSize) {
-        final int DEFAULT_POOL_SIZE = 100;
-        return Math.max(poolSize, DEFAULT_POOL_SIZE);
     }
 
     public void run() {
@@ -46,5 +47,23 @@ public class WebServer {
         } finally {
             pool.shutdown();
         }
+    }
+
+    public static Integer defaultPortIfNull(String[] args) {
+        return Stream.of(args)
+                .findFirst()
+                .map(Integer::parseInt)
+                .orElse(WebServer.DEFAULT_PORT);
+    }
+
+    private int checkPort(int port) {
+        if (port < 1 || 65535 < port) {
+            return DEFAULT_PORT;
+        }
+        return port;
+    }
+
+    private int defaultPoolSize(int poolSize) {
+        return Math.max(poolSize, DEFAULT_POOL_SIZE);
     }
 }
