@@ -48,7 +48,7 @@ public class WebServer {
         }
     }
 
-    public static Integer defaultPortIfNull(String[] args) {
+    public static int defaultPortIfNull(String[] args) {
         return Stream.of(args)
                 .findFirst()
                 .map(Integer::parseInt)
