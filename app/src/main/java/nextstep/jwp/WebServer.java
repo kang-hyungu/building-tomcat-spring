@@ -19,10 +19,6 @@ public class WebServer {
     private final int port;
     private final ExecutorService pool;
 
-    public WebServer() {
-        this(DEFAULT_PORT, DEFAULT_POOL_SIZE);
-    }
-
     public WebServer(int port) {
         this(port, DEFAULT_POOL_SIZE);
     }
@@ -35,17 +31,20 @@ public class WebServer {
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Web Server started {} port.", serverSocket.getLocalPort());
-
-            Socket connection;
-            while ((connection = serverSocket.accept()) != null) {
-                pool.submit(new HttpRequestHandler(connection));
-            }
+            handle(serverSocket);
         } catch (IOException exception) {
             logger.error("Exception accepting connection", exception);
         } catch (RuntimeException exception) {
             logger.error("Unexpected error", exception);
         } finally {
             pool.shutdown();
+        }
+    }
+
+    private void handle(ServerSocket serverSocket) throws IOException {
+        Socket connection;
+        while ((connection = serverSocket.accept()) != null) {
+            pool.submit(new RequestHandler(connection));
         }
     }
 

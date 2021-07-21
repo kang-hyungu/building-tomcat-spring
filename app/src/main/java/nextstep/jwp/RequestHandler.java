@@ -8,13 +8,13 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class HttpRequestHandler implements Runnable {
+public class RequestHandler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
 
-    public HttpRequestHandler(Socket connection) {
+    public RequestHandler(Socket connection) {
         this.connection = Objects.requireNonNull(connection);
     }
 
@@ -36,12 +36,12 @@ public class HttpRequestHandler implements Runnable {
         }
     }
 
-    private BufferedWriter createWriter() throws IOException {
-        return new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-    }
-
     private BufferedReader createReader() throws IOException {
         return new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+    }
+
+    private BufferedWriter createWriter() throws IOException {
+        return new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
     }
 
     private String readRequest(BufferedReader reader) throws IOException {
@@ -55,7 +55,7 @@ public class HttpRequestHandler implements Runnable {
     }
 
     private void writeResponse(Writer writer, String responseBody) throws IOException {
-        writer.write("HTTP/1.1 200 OK \r\n");
+        writer.write("HTTP/1.1 200 OK\r\n");
         writer.write("Content-Type: text/html;charset=utf-8\r\n");
         writer.write("Content-Length: " + responseBody.getBytes(StandardCharsets.UTF_8).length + "\r\n");
         writer.write("\r\n");
