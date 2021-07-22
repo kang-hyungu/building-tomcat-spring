@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class WebServer {
 
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
+
     private static final int DEFAULT_PORT = 8080;
     private static final int DEFAULT_POOL_SIZE = 100;
 

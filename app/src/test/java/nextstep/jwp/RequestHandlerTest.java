@@ -1,6 +1,5 @@
 package nextstep.jwp;
 
-import nextstep.jwp.http.Constants;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +16,7 @@ class RequestHandlerTest {
         requestHandler.run();
 
         // then
-        String expected = String.join(Constants.NEW_LINE,
+        String expected = String.join("\r\n",
                 "HTTP/1.1 200 OK",
                 "Content-Type: text/html;charset=utf-8",
                 "Content-Length: 11",
