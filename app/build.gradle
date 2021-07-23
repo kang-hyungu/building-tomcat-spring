@@ -3,6 +3,9 @@ plugins {
     id 'org.sonarqube' version '3.3'
 }
 
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
 repositories {
     mavenCentral()
 }
@@ -13,6 +16,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testImplementation 'org.assertj:assertj-core:3.20.2'
+    testImplementation "org.mockito:mockito-core:3.+"
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
