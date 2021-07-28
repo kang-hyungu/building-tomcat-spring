@@ -28,12 +28,12 @@ class FileTest {
         // todo
         final String actual = "";
 
-        assertThat(actual).containsPattern("(.*)/" + fileName);
+        assertThat(actual).endsWith(fileName);
     }
 
     /**
      * 읽어온 파일의 내용을 I/O Stream을 사용해서 사용자에게 전달 해야 한다.
-     * Paths와 Files 클래스를 사용하여 파일의 내용을 읽어보자.
+     * File, Files 클래스를 사용하여 파일의 내용을 읽어보자.
      */
     @Test
     void 파일의_내용을_읽는다() {

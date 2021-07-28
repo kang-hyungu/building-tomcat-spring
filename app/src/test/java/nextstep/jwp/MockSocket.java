@@ -61,4 +61,8 @@ public class MockSocket extends Socket {
         }
         return byteArray;
     }
+
+    public String getRequest() {
+        return request;
+    }
 }
