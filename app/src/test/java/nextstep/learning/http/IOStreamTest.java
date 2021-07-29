@@ -185,7 +185,8 @@ class IOStreamTest {
     class InputStreamReader_학습_테스트 {
 
         /**
-         * <b>BufferedReader</b>를 사용하면 <b>readLine</b> 메서드를 사용해서 문자열을 한 줄 씩 읽어올 수 있다.
+         * <b>InputStreamReader</b>를 사용해서 바이트를 문자(char)로 읽어온다.
+         * 필터인 <b>BufferedReader</b>를 사용하면 <b>readLine</b> 메서드를 사용해서 문자열(String)을 한 줄 씩 읽어올 수 있다.
          */
         @Test
         void BufferedReader를_사용하여_문자열을_읽어온다() {
