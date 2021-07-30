@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class RequestHandler implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private final Socket connection;
 
@@ -21,7 +21,7 @@ public class RequestHandler implements Runnable {
 
     @Override
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
+        log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try (final InputStream inputStream = connection.getInputStream();
              final OutputStream outputStream = connection.getOutputStream()) {
@@ -32,7 +32,7 @@ public class RequestHandler implements Runnable {
             outputStream.write(httpResponse.getBytes());
             outputStream.flush();
         } catch (IOException exception) {
-            logger.error("Exception stream", exception);
+            log.error("Exception stream", exception);
         } finally {
             close();
         }
@@ -51,7 +51,7 @@ public class RequestHandler implements Runnable {
         try {
             connection.close();
         } catch (IOException exception) {
-            logger.error("Exception closing socket", exception);
+            log.error("Exception closing socket", exception);
         }
     }
 }

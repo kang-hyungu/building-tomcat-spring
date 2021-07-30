@@ -22,9 +22,9 @@ class RequestHandlerTest {
 
         // then
         String expected = String.join("\r\n",
-                "HTTP/1.1 200 OK",
-                "Content-Type: text/html;charset=utf-8",
-                "Content-Length: 11",
+                "HTTP/1.1 200 OK ",
+                "Content-Type: text/html;charset=utf-8 ",
+                "Content-Length: 11 ",
                 "",
                 "Hello World");
         assertThat(socket.output()).isEqualTo(expected);
@@ -34,9 +34,9 @@ class RequestHandlerTest {
     void index() throws IOException {
         // given
         final String httpRequest= String.join("\r\n",
-                "GET /index.html HTTP/1.1",
-                "Host: localhost:8080",
-                "Connection: keep-alive");
+                "GET /index.html HTTP/1.1 ",
+                "Host: localhost:8080 ",
+                "Connection: keep-alive ");
 
         final MockSocket socket = new MockSocket(httpRequest);
         final RequestHandler requestHandler = new RequestHandler(socket);
@@ -46,9 +46,9 @@ class RequestHandlerTest {
 
         // then
         final URL resource = getClass().getClassLoader().getResource("static/index.html");
-        String expected = "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html;charset=utf-8\r\n" +
-                "Content-Length: 3027\r\n" +
+        String expected = "HTTP/1.1 200 OK \r\n" +
+                "Content-Type: text/html;charset=utf-8 \r\n" +
+                "Content-Length: 3027 \r\n" +
                 "\r\n"+
                 new String(Files.readAllBytes(new File(resource.getFile()).toPath()));
         assertThat(socket.output()).isEqualTo(expected);
