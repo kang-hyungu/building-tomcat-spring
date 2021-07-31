@@ -10,15 +10,15 @@ public class InMemoryUserRepository {
     private static final Map<String, User> database = new ConcurrentHashMap<>();
 
     static {
-        final User user = new User(1, "hkkang", "password", "강현구");
-        database.put(user.geUserId(), user);
+        final User user = new User(1, "gugu", "password", "hkkang@woowahan.com");
+        database.put(user.getAccount(), user);
     }
 
     public static void save(User user) {
-        database.put(user.geUserId(), user);
+        database.put(user.getAccount(), user);
     }
 
-    public static User findByUserId(String userId) {
-        return database.get(userId);
+    public static User findByAccount(String account) {
+        return database.get(account);
     }
 }

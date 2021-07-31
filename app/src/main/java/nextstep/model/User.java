@@ -3,32 +3,32 @@ package nextstep.model;
 public class User {
 
     private final long id;
-    private final String userId;
+    private final String account;
     private final String password;
-    private final String name;
+    private final String email;
 
-    public User(long id, String userId, String password, String name) {
+    public User(long id, String account, String password, String email) {
         this.id = id;
-        this.userId = userId;
+        this.account = account;
         this.password = password;
-        this.name = name;
+        this.email = email;
     }
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
-    public String geUserId() {
-        return userId;
+    public String getAccount() {
+        return account;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", userId='" + userId + '\'' +
+                ", account='" + account + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
                 '}';
     }
 }
