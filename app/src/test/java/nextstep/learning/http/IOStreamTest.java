@@ -130,7 +130,6 @@ class IOStreamTest {
             inputStream.close();
         }
 
-
         /**
          * 스트림 사용이 끝나면 항상 <b>close()</b> 메서드를 호출하여 스트림을 닫는다.<br>
          * 장시간 스트림을 닫지 않으면 파일, 포트 등 다양한 리소스에서 누수(leak)가 발생한다.

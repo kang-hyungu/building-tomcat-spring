@@ -3,7 +3,9 @@ package nextstep.jwp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
 
@@ -27,9 +29,9 @@ public class RequestHandler implements Runnable {
             final String responseBody = "Hello world!";
 
             final String response = String.join("\r\n",
-                    "HTTP/1.1 200 OK",
-                    "Content-Type: text/html;charset=utf-8",
-                    "Content-Length: " + responseBody.getBytes().length,
+                    "HTTP/1.1 200 OK ",
+                    "Content-Type: text/html;charset=utf-8 ",
+                    "Content-Length: " + responseBody.getBytes().length + " ",
                     "",
                     responseBody);
 
