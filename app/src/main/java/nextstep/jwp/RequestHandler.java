@@ -2,6 +2,7 @@ package nextstep.jwp;
 
 import nextstep.jwp.db.InMemoryUserRepository;
 import nextstep.jwp.http.HttpRequest;
+import nextstep.jwp.http.HttpResponse;
 import nextstep.jwp.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Objects;
 
@@ -30,6 +32,7 @@ public class RequestHandler implements Runnable {
              final OutputStream outputStream = createOutputStream()) {
 
             final HttpRequest httpRequest = new HttpRequest(reader);
+            final HttpResponse httpResponse = new HttpResponse();
 
             final String uri = httpRequest.getPathInfo();
 
@@ -118,7 +121,7 @@ public class RequestHandler implements Runnable {
     }
 
     private BufferedReader createReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        return new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
     }
 
     private BufferedOutputStream createOutputStream() throws IOException {
