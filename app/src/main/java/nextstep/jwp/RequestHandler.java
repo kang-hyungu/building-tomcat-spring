@@ -31,7 +31,7 @@ public class RequestHandler implements Runnable {
 
             final HttpRequest httpRequest = new HttpRequest(reader);
 
-            final String uri = httpRequest.getUri();
+            final String uri = httpRequest.getPathInfo();
 
             byte[] responseBody;
             User user = null;
@@ -40,7 +40,7 @@ public class RequestHandler implements Runnable {
                 responseBody = getResponseBody("index.html");
             } else if("/login".equals(uri)) {
                 if (httpRequest.isPost()) {
-                    user = InMemoryUserRepository.findByAccount(httpRequest.getRequestBody("account"))
+                    user = InMemoryUserRepository.findByAccount(httpRequest.getParameter("account"))
                             .orElseThrow(RuntimeException::new);
                     log.info("User : {}", user);
                 }
@@ -49,9 +49,9 @@ public class RequestHandler implements Runnable {
             } else if ("/register".equals(uri)) {
                 if (httpRequest.isPost()) {
                     user = new User(2,
-                            httpRequest.getRequestBody("account"),
-                            httpRequest.getRequestBody("password"),
-                            httpRequest.getRequestBody("email"));
+                            httpRequest.getParameter("account"),
+                            httpRequest.getParameter("password"),
+                            httpRequest.getParameter("email"));
                     InMemoryUserRepository.save(user);
                 }
 
