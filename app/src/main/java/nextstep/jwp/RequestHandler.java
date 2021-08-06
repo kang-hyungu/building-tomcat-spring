@@ -1,6 +1,7 @@
 package nextstep.jwp;
 
 import nextstep.jwp.db.InMemoryUserRepository;
+import nextstep.jwp.http.HttpRequest;
 import nextstep.jwp.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +10,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RequestHandler implements Runnable {
 
@@ -32,22 +29,9 @@ public class RequestHandler implements Runnable {
         try (final BufferedReader reader = createReader();
              final OutputStream outputStream = createOutputStream()) {
 
-            String line = reader.readLine();
-            if (line == null) {
-                return;
-            }
+            final HttpRequest httpRequest = new HttpRequest(reader);
 
-            final String method = line.split(" ")[0];
-            final String uri = line.split(" ")[1];
-
-            final Map<String, String> headers = new ConcurrentHashMap<>();
-            while (!"".equals(line)) {
-                line = reader.readLine();
-                final String[] header = line.split(":");
-                if (header.length == 2) {
-                    headers.put(header[0].trim(), header[1].trim());
-                }
-            }
+            final String uri = httpRequest.getUri();
 
             byte[] responseBody;
             User user = null;
@@ -55,18 +39,19 @@ public class RequestHandler implements Runnable {
             if ("/index.html".equals(uri)) {
                 responseBody = getResponseBody("index.html");
             } else if("/login".equals(uri)) {
-                if ("POST".equals(method)) {
-                    final Map<String, String> requestBody = parseRequestBody(reader, headers);
-                    user = InMemoryUserRepository.findByAccount(requestBody.get("account"))
+                if (httpRequest.isPost()) {
+                    user = InMemoryUserRepository.findByAccount(httpRequest.getRequestBody("account"))
                             .orElseThrow(RuntimeException::new);
                     log.info("User : {}", user);
                 }
 
                 responseBody = getResponseBody("login.html");
             } else if ("/register".equals(uri)) {
-                if ("POST".equals(method)) {
-                    final Map<String, String> requestBody = parseRequestBody(reader, headers);
-                    user = new User(2, requestBody.get("account"), requestBody.get("password"), requestBody.get("email"));
+                if (httpRequest.isPost()) {
+                    user = new User(2,
+                            httpRequest.getRequestBody("account"),
+                            httpRequest.getRequestBody("password"),
+                            httpRequest.getRequestBody("email"));
                     InMemoryUserRepository.save(user);
                 }
 
@@ -93,22 +78,9 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private Map<String, String> parseRequestBody(BufferedReader reader, Map<String, String> headers) throws IOException {
-        int contentLength = Integer.parseInt(headers.get("Content-Length"));
-        char[] buffer = new char[contentLength];
-        reader.read(buffer, 0, contentLength);
-        return parseQueryString(new String(buffer));
-    }
-
     private byte[] getResponseBody(String fileName) throws IOException {
         final URL resource = getClass().getClassLoader().getResource("static/" + fileName);
         return Files.readAllBytes(new File(resource.getPath()).toPath());
-    }
-
-    private Map<String, String> parseQueryString(String queryString) {
-        return Stream.of(queryString.split("&"))
-                .map(param -> param.split("="))
-                .collect(Collectors.toMap(param -> param[0], param -> param[1]));
     }
 
     private byte[] getResponseHeader(byte[] responseBody, User user) {
