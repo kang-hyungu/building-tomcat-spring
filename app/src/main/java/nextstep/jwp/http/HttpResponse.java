@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.UUID;
 
 public class HttpResponse {
 
@@ -28,8 +29,8 @@ public class HttpResponse {
 
     public void forward(String path) {
         final byte[] body = read(path);
-        addHeader("Content-Type", "text/html;charset=utf-8;");
-        addHeader("Content-Length", body.length);
+        addHeader(HttpConstants.CONTENT_TYPE, "text/html;charset=utf-8;");
+        addHeader(HttpConstants.CONTENT_LENGTH, body.length);
         responseOk();
         responseBody(body);
     }
@@ -59,7 +60,7 @@ public class HttpResponse {
         try {
             outputStream.writeBytes(StatusLine.FOUND.withNewLine());
             outputStream.writeBytes(headers.value());
-            outputStream.writeBytes("Location: " + location);
+            outputStream.writeBytes(HttpConstants.LOCATION + ": " + location);
             outputStream.writeBytes(HttpConstants.NEW_LINE);
             outputStream.writeBytes(HttpConstants.NEW_LINE);
         } catch (IOException e) {
@@ -86,5 +87,9 @@ public class HttpResponse {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public void setCookie() {
+        addHeader(HttpConstants.SET_COOKIE, HttpSessions.JSESSIONID + "=" + UUID.randomUUID());
     }
 }

@@ -12,7 +12,6 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.UUID;
 
 public class RequestHandler implements Runnable {
 
@@ -40,8 +39,8 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = new HttpRequest(reader);
             final HttpResponse httpResponse = new HttpResponse(outputStream);
 
-            if (httpRequest.getCookies().getCookie(HttpSessions.SESSION_ID_NAME) == null) {
-                httpResponse.addHeader("Set-Cookie", HttpSessions.SESSION_ID_NAME + "=" + UUID.randomUUID());
+            if (httpRequest.hasCookie(HttpSessions.JSESSIONID)) {
+                httpResponse.setCookie();
             }
 
             final Controller controller = requestMapping.getController(httpRequest);

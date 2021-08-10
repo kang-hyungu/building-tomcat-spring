@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSessions {
 
-    public static final String SESSION_ID_NAME = "JSESSIONID";
+    public static final String JSESSIONID = "JSESSIONID";
 
     private static final Map<String, HttpSession> SESSIONS = new ConcurrentHashMap<>();
 

@@ -29,10 +29,10 @@ public class LoginController extends AbstractController {
         response.sendRedirect("401.html");
     }
 
-    private void login(HttpRequest request, HttpResponse response, User found) {
-        if (found.checkPassword(request.getParameter("password"))) {
+    private void login(HttpRequest request, HttpResponse response, User user) {
+        if (user.checkPassword(request.getParameter("password"))) {
             final HttpSession httpSession = request.getSession();
-            httpSession.setAttribute("user", found);
+            httpSession.setAttribute("user", user);
             response.sendRedirect("index.html");
         }
     }

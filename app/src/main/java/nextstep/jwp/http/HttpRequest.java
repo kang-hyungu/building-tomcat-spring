@@ -36,10 +36,6 @@ public class HttpRequest {
         return requestParams.getParameter(name);
     }
 
-    public boolean isPost() {
-        return requestLine.isPost();
-    }
-
     public String getPathInfo() {
         return requestLine.getPathInfo();
     }
@@ -54,5 +50,9 @@ public class HttpRequest {
 
     public HttpCookie getCookies() {
         return headers.getCookies();
+    }
+
+    public boolean hasCookie(String name) {
+        return getCookies().getCookie(name) != null;
     }
 }

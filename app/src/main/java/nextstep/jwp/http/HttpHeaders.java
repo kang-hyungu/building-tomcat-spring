@@ -41,14 +41,14 @@ public class HttpHeaders {
     }
 
     int getContentLength() {
-        return getIntHeader("Content-Length");
+        return getIntHeader(HttpConstants.CONTENT_LENGTH);
     }
 
     HttpCookie getCookies() {
-        return new HttpCookie(getHeader("Cookie"));
+        return new HttpCookie(getHeader(HttpConstants.COOKIE));
     }
 
     public HttpSession getSession() {
-        return HttpSessions.getSession(getCookies().getCookie(HttpSessions.SESSION_ID_NAME));
+        return HttpSessions.getSession(getCookies().getCookie(HttpSessions.JSESSIONID));
     }
 }

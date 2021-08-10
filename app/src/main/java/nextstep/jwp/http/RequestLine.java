@@ -33,10 +33,6 @@ public class RequestLine {
         }
     }
 
-    public boolean isPost() {
-        return method.isPost();
-    }
-
     public HttpMethod getMethod() {
         return method;
     }
