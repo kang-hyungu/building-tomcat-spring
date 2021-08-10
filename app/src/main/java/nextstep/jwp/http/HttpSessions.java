@@ -1,28 +1,25 @@
 package nextstep.jwp.http;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpSessions {
 
     public static final String SESSION_ID_NAME = "JSESSIONID";
 
-    private static final Map<String, HttpSession> sessions = new HashMap<>();
+    private static final Map<String, HttpSession> SESSIONS = new ConcurrentHashMap<>();
 
     public static HttpSession getSession(String id) {
-        HttpSession session = sessions.get(id);
-
-        if (session == null) {
-            session = new HttpSession(id);
-            sessions.put(id, session);
-            return session;
-        }
-
-        return session;
+        return Optional.ofNullable(SESSIONS.get(id))
+                .orElseGet(() -> {
+                    final HttpSession session = new HttpSession(id);
+                    return SESSIONS.put(id, session);
+                });
     }
 
     static void remove(String id) {
-        sessions.remove(id);
+        SESSIONS.remove(id);
     }
 
     private HttpSessions() {}

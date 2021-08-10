@@ -25,6 +25,6 @@ public class HttpCookie {
         }
         return Stream.of(cookies.split(";"))
                 .map(param -> param.split("="))
-                .collect(Collectors.toMap(param -> param[0], param -> param[1]));
+                .collect(Collectors.toMap(param -> param[0].trim(), param -> param[1].trim()));
     }
 }

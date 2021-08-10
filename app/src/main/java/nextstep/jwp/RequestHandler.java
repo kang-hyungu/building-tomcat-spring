@@ -2,6 +2,7 @@ package nextstep.jwp;
 
 import nextstep.jwp.http.HttpRequest;
 import nextstep.jwp.http.HttpResponse;
+import nextstep.jwp.http.HttpSessions;
 import nextstep.jwp.mvc.Controller;
 import nextstep.jwp.mvc.RequestMapping;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.UUID;
 
 public class RequestHandler implements Runnable {
 
@@ -38,9 +40,12 @@ public class RequestHandler implements Runnable {
             final HttpRequest httpRequest = new HttpRequest(reader);
             final HttpResponse httpResponse = new HttpResponse(outputStream);
 
+            if (httpRequest.getCookies().getCookie(HttpSessions.SESSION_ID_NAME) == null) {
+                httpResponse.addHeader("Set-Cookie", HttpSessions.SESSION_ID_NAME + "=" + UUID.randomUUID());
+            }
+
             final Controller controller = requestMapping.getController(httpRequest);
             controller.service(httpRequest, httpResponse);
-
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {

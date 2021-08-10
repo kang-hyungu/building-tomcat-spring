@@ -17,20 +17,24 @@ public class LoginController extends AbstractController {
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
-        final Optional<User> user = InMemoryUserRepository.findByAccount(request.getParameter("account"));
+        final Optional<User> optionalUser = InMemoryUserRepository.findByAccount(request.getParameter("account"));
 
-        if (user.isPresent()) {
-            final User found = user.get();
-            log.info("User : {}", found);
+        if (optionalUser.isPresent()) {
+            final User user = optionalUser.get();
+            log.info("User : {}", user);
 
-            if (found.checkPassword(request.getParameter("password"))) {
-                final HttpSession httpSession = request.getSession();
-                httpSession.setAttribute("user", found);
-                response.sendRedirect("index.html");
-            }
+            login(request, response, user);
         }
 
         response.sendRedirect("401.html");
+    }
+
+    private void login(HttpRequest request, HttpResponse response, User found) {
+        if (found.checkPassword(request.getParameter("password"))) {
+            final HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("user", found);
+            response.sendRedirect("index.html");
+        }
     }
 
     @Override
