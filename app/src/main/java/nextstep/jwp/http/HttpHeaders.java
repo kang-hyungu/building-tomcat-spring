@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpHeaders {
 
-    private final Map<HttpHeader, String> headers;
+    private final Map<String, String> headers;
 
     HttpHeaders() {
         this.headers = new ConcurrentHashMap<>();
@@ -14,30 +14,41 @@ public class HttpHeaders {
     void add(String header) {
         final String[] headerTokens = header.split(":");
         if (headerTokens.length == 2) {
-            final String headerKey = headerTokens[0].trim();
-            this.headers.put(HttpHeader.valueOf(headerKey), headerTokens[1].trim());
+            this.headers.put(headerTokens[0].trim(), headerTokens[1].trim());
         }
     }
 
-    String getHeader(HttpHeader httpHeader) {
+    void put(String key, String value) {
+        this.headers.put(key, value);
+    }
+
+    String value() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        headers.forEach((key, value) ->
+            stringBuilder.append(key).append(":").append(value)
+                    .append(HttpConstants.NEW_LINE)
+        );
+        return stringBuilder.toString();
+    }
+
+    String getHeader(String httpHeader) {
         return headers.get(httpHeader);
     }
 
-    private int getIntHeader(HttpHeader name) {
+    private int getIntHeader(String name) {
         String header = getHeader(name);
         return header == null ? 0 : Integer.parseInt(header);
     }
 
     int getContentLength() {
-        return getIntHeader(HttpHeader.CONTENT_LENGTH);
+        return getIntHeader("Content-Length");
     }
 
     HttpCookie getCookies() {
-        return new HttpCookie(getHeader(HttpHeader.COOKIE));
+        return new HttpCookie(getHeader("Cookie"));
     }
 
-    HttpSession getSession() {
-        return new HttpSession();
-//        return HttpSessions.getSession(getCookies().getCookie("JSESSIONID"));
+    public HttpSession getSession() {
+        return HttpSessions.getSession(getCookies().getCookie(HttpSessions.SESSION_ID_NAME));
     }
 }

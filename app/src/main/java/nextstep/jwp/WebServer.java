@@ -1,11 +1,15 @@
 package nextstep.jwp;
 
+import nextstep.jwp.mvc.RequestMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 public class WebServer {
@@ -16,8 +20,14 @@ public class WebServer {
 
     private final int port;
 
-    public WebServer(int port) {
+    private final ExecutorService executorService;
+
+    private final RequestMapping requestMapping;
+
+    public WebServer(int port, RequestMapping requestMapping) {
         this.port = checkPort(port);
+        this.executorService = Executors.newFixedThreadPool(10);
+        this.requestMapping = Objects.requireNonNull(requestMapping);
     }
 
     public void run() {
@@ -34,7 +44,7 @@ public class WebServer {
     private void handle(ServerSocket serverSocket) throws IOException {
         Socket connection;
         while ((connection = serverSocket.accept()) != null) {
-            new Thread(new RequestHandler(connection)).start();
+            executorService.submit(new RequestHandler(connection, requestMapping));
         }
     }
 

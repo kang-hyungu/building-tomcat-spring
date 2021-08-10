@@ -43,4 +43,16 @@ public class HttpRequest {
     public String getPathInfo() {
         return requestLine.getPathInfo();
     }
+
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
+    }
+
+    public HttpSession getSession() {
+        return headers.getSession();
+    }
+
+    public HttpCookie getCookies() {
+        return headers.getCookies();
+    }
 }
