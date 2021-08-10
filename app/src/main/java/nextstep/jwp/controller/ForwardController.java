@@ -13,7 +13,7 @@ public class ForwardController extends AbstractController {
     }
 
     private String getDefaultPath(String path) {
-        if (path.equals("/")) {
+        if (path.equals("/") || path.endsWith("index.html")) {
             return "index.html";
         }
         return path;
