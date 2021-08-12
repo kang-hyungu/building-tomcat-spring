@@ -9,25 +9,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 public class JwpApplication {
 
     private static final Logger log = LoggerFactory.getLogger(JwpApplication.class);
 
+    private static final int DEFAULT_PORT = 8080;
+
     public static void main(String[] args) throws Exception {
-        final int port = WebServer.defaultPortIfNull(args);
+        final int port = defaultPortIfNull(args);
         final Tomcat tomcat = new Tomcat();
         tomcat.setPort(port);
+        final Context context = addWebApp(tomcat);
 
-        final String path = JwpApplication.class.getClassLoader().getResource("static").getPath();
-        final File docBase = new File(path);
-        final Context context = tomcat.addWebapp(null, "/", docBase.getAbsolutePath());
-        log.info("docBase : {}", docBase.getAbsolutePath());
-
+        // 톰캣 실행할 때 불필요한 설정은 skip
         skipBindOnInit(tomcat);
         skipTldScan(context);
 
         tomcat.start();
+    }
+
+    private static int defaultPortIfNull(String[] args) {
+        return Stream.of(args)
+                .findFirst()
+                .map(Integer::parseInt)
+                .orElse(DEFAULT_PORT);
+    }
+
+    private static Context addWebApp(Tomcat tomcat) {
+        final String path = JwpApplication.class.getClassLoader().getResource("static").getPath();
+        final File docBase = new File(path);
+        final Context context = tomcat.addWebapp(null, "/", docBase.getAbsolutePath());
+        log.info("docBase : {}", docBase.getAbsolutePath());
+        return context;
     }
 
     private static void skipBindOnInit(Tomcat tomcat) {
