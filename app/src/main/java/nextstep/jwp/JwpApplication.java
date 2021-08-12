@@ -19,9 +19,10 @@ public class JwpApplication {
 
     public static void main(String[] args) throws Exception {
         final int port = defaultPortIfNull(args);
+
         final Tomcat tomcat = new Tomcat();
         tomcat.setPort(port);
-        final Context context = addWebApp(tomcat);
+        final Context context = addWebapp(tomcat);
 
         // 톰캣 실행할 때 불필요한 설정은 skip
         skipBindOnInit(tomcat);
@@ -37,11 +38,10 @@ public class JwpApplication {
                 .orElse(DEFAULT_PORT);
     }
 
-    private static Context addWebApp(Tomcat tomcat) {
-        final String path = JwpApplication.class.getClassLoader().getResource("static").getPath();
-        final File docBase = new File(path);
-        final Context context = tomcat.addWebapp(null, "/", docBase.getAbsolutePath());
-        log.info("docBase : {}", docBase.getAbsolutePath());
+    private static Context addWebapp(Tomcat tomcat) {
+        final String docBase = new File("app/webapp/").getAbsolutePath();
+        final Context context = tomcat.addWebapp("/", docBase);
+        log.info("configuring app with basedir: {}", docBase);
         return context;
     }
 

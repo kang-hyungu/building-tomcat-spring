@@ -37,7 +37,7 @@ public class HttpResponse {
 
     public byte[] read(String fileName) {
         try {
-            final URL resource = getClass().getClassLoader().getResource("static/" + fileName);
+            final URL resource = getClass().getClassLoader().getResource("webapp/WEB-INF/static/" + fileName);
             return Files.readAllBytes(new File(resource.getPath()).toPath());
         } catch (IOException | NullPointerException e) {
             log.error("file name: {}, message: {}", fileName, e.getMessage());
