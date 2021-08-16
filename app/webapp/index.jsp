@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -43,7 +44,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="/index.html">
+                            <a class="nav-link" href="/index.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 대시보드
                             </a>
@@ -85,7 +86,7 @@
                         <div class="d-flex align-items-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; Your Website 2021</div>
                             <div>
-                                <a href="/index.html">Home</a>
+                                <a href="/index.jsp">Home</a>
                                 &middot;
                                 <a href="#">Privacy Policy</a>
                                 &middot;
