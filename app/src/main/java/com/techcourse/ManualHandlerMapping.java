@@ -4,9 +4,10 @@ import com.techcourse.controller.LoginController;
 import com.techcourse.controller.LoginViewController;
 import com.techcourse.controller.RegisterController;
 import com.techcourse.controller.RegisterViewController;
+import jakarta.servlet.http.HttpServletRequest;
 import nextstep.mvc.HandlerMapping;
-import nextstep.mvc.controller.Controller;
-import nextstep.mvc.controller.ForwardController;
+import nextstep.mvc.controller.asis.Controller;
+import nextstep.mvc.controller.asis.ForwardController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +33,9 @@ public class ManualHandlerMapping implements HandlerMapping {
     }
 
     @Override
-    public Controller getHandler(String path) {
-        log.debug("Request Mapping Url : {}", path);
-        return controllers.get(path);
+    public Controller getHandler(HttpServletRequest request) {
+        final String requestURI = request.getRequestURI();
+        log.debug("Request Mapping Uri : {}", requestURI);
+        return controllers.get(requestURI);
     }
 }

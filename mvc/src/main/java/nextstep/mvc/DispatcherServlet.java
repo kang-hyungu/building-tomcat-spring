@@ -2,47 +2,61 @@ package nextstep.mvc;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import nextstep.mvc.controller.Controller;
+import nextstep.mvc.controller.asis.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-@WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
 
     private static final String DEFAULT_REDIRECT_PREFIX = "redirect:";
 
-    private final HandlerMapping handlerMapping;
+    private final List<HandlerMapping> handlerMappings = new ArrayList<>();
+    private final List<HandlerAdapter> handlerAdapters = new ArrayList<>();
 
-    public DispatcherServlet(HandlerMapping handlerMapping) {
-        this.handlerMapping = handlerMapping;
+    public void addHandlerMapping(HandlerMapping handlerMapping) {
+        handlerMappings.add(handlerMapping);
+    }
+
+    public void addHandlerAdapter(HandlerAdapter handlerAdapter) {
+        handlerAdapters.add(handlerAdapter);
     }
 
     @Override
     public void init() {
-        this.handlerMapping.initialize();
+        handlerMappings.forEach(HandlerMapping::initialize);
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        final String requestUri = request.getRequestURI();
-        log.debug("Method : {}, Request URI : {}", request.getMethod(), requestUri);
+        log.debug("Method : {}, Request URI : {}", request.getMethod(), request.getRequestURI());
 
         try {
-            final Controller controller = handlerMapping.getHandler(requestUri);
+            final Controller controller = getHandler(request);
             final String viewName = controller.execute(request, response);
             move(viewName, request, response);
         } catch (Throwable e) {
             log.error("Exception : {}", e.getMessage(), e);
             throw new ServletException(e.getMessage());
         }
+    }
+
+    private Controller getHandler(HttpServletRequest request) {
+        return handlerMappings.stream()
+                .map(hm -> hm.getHandler(request))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(Controller.class::cast)
+                .orElse(null);
     }
 
     private void move(String viewName, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
