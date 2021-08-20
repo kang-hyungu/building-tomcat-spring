@@ -10,6 +10,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'com.google.guava:guava:29.0-jre'
 
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
     implementation 'jakarta.annotation:jakarta.annotation-api:2.0.0'
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api:2.0.0'
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'

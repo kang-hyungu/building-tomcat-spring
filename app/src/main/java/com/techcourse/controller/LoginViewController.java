@@ -1,13 +1,10 @@
 package com.techcourse.controller;
 
-import com.techcourse.domain.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import nextstep.mvc.controller.asis.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 public class LoginViewController implements Controller {
 
@@ -15,15 +12,11 @@ public class LoginViewController implements Controller {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        final User user = getUser(request.getSession());
-        if (user != null) {
-            log.info("logged in {}", user.getAccount());
-            return "redirect:/index.jsp";
-        }
-        return "/login.jsp";
-    }
-
-    private User getUser(HttpSession session) {
-        return (User) session.getAttribute("user");
+        return UserSession.getUserFrom(request.getSession())
+                .map(user -> {
+                    log.info("logged in {}", user.getAccount());
+                    return "redirect:/index.jsp";
+                })
+                .orElse("/login.jsp");
     }
 }

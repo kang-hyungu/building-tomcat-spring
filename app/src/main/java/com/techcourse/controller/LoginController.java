@@ -2,14 +2,12 @@ package com.techcourse.controller;
 
 import com.techcourse.domain.User;
 import com.techcourse.repository.InMemoryUserRepository;
-import nextstep.mvc.controller.asis.Controller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
+import nextstep.mvc.controller.asis.Controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginController implements Controller {
 
@@ -17,21 +15,22 @@ public class LoginController implements Controller {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        final Optional<User> optionalUser = InMemoryUserRepository.findByAccount(request.getParameter("account"));
-
-        if (optionalUser.isPresent()) {
-            final User user = optionalUser.get();
-            log.info("User : {}", user);
-            return login(request, user);
+        if (UserSession.isLoggedIn(request.getSession())) {
+            return "redirect:/index.jsp";
         }
 
-        return "redirect:/401.jsp";
+        return InMemoryUserRepository.findByAccount(request.getParameter("account"))
+                .map(user -> {
+                    log.info("User : {}", user);
+                    return login(request, user);
+                })
+                .orElse("redirect:/401.jsp");
     }
 
     private String login(HttpServletRequest request, User user) {
         if (user.checkPassword(request.getParameter("password"))) {
             final HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+            session.setAttribute(UserSession.SESSION_KEY, user);
             return "redirect:/index.jsp";
         } else {
             return "redirect:/401.jsp";

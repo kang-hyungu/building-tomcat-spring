@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class AnnotationHandlerMapping implements HandlerMapping {
 
-    private Object[] basePackage;
+    private final Object[] basePackage;
 
-    private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
+    private final Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
 
     public AnnotationHandlerMapping(Object... basePackage) {
         this.basePackage = basePackage;
