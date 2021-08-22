@@ -2,6 +2,7 @@ package samples;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import nextstep.mvc.view.JspView;
 import nextstep.mvc.view.ModelAndView;
 import nextstep.web.annotation.Controller;
 import nextstep.web.annotation.RequestMapping;
@@ -12,17 +13,21 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class TestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
+    private static final Logger log = LoggerFactory.getLogger(TestController.class);
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-test", method = RequestMethod.GET)
     public ModelAndView findUserId(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("test controller get method");
-        return null;
+        log.info("test controller get method");
+        final ModelAndView modelAndView = new ModelAndView(new JspView(""));
+        modelAndView.addObject("id", request.getAttribute("id"));
+        return modelAndView;
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    @RequestMapping(value = "/post-test", method = RequestMethod.POST)
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("test controller post method");
-        return null;
+        log.info("test controller post method");
+        final ModelAndView modelAndView = new ModelAndView(new JspView(""));
+        modelAndView.addObject("id", request.getAttribute("id"));
+        return modelAndView;
     }
 }
