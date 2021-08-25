@@ -21,7 +21,7 @@ public class JwpApplication {
         final Tomcat tomcat = new Tomcat();
         tomcat.setPort(port);
 
-        final Context context = addWebapp(tomcat);
+        addWebapp(tomcat);
 
         // 불필요한 설정은 skip
         skipBindOnInit(tomcat);
