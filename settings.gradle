@@ -2,3 +2,4 @@ rootProject.name = 'building-tomcat-spring'
 
 include 'mvc'
 include 'app'
+include 'learning'

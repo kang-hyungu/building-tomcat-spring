@@ -11,7 +11,7 @@
     </welcome-file-list>
     <servlet>
         <servlet-name>HelloWorld</servlet-name>
-        <servlet-class>learning.HelloWorldServlet</servlet-class>
+        <servlet-class>servlet.HelloWorldServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HelloWorld</servlet-name>
