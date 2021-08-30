@@ -22,8 +22,6 @@ class ServletTest {
      * 서블릿 컨테이너 설정 테스트 코드
      * accept-count 1
      * threads max 1
-     *
-     * 3. 서블릿 필터 예제
      */
 
     @Test
